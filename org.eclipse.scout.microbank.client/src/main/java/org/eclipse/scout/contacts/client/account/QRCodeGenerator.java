@@ -1,4 +1,4 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.client.account;
 
 import java.awt.Color;
 import java.awt.Graphics2D;

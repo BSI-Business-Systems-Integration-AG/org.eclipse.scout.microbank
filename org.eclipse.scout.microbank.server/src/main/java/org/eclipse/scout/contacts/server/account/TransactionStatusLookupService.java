@@ -1,7 +1,8 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.server.account;
 
 import java.util.List;
 
+import org.eclipse.scout.contacts.shared.account.ITransactionStatusLookupService;
 import org.eclipse.scout.rt.server.services.lookup.AbstractLookupService;
 import org.eclipse.scout.rt.shared.services.lookup.ILookupCall;
 import org.eclipse.scout.rt.shared.services.lookup.ILookupRow;

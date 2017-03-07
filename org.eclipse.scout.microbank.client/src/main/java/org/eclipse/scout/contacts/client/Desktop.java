@@ -13,7 +13,6 @@ package org.eclipse.scout.contacts.client;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.scout.contacts.client.common.SearchOutline;
 import org.eclipse.scout.contacts.client.contact.ContactOutline;
 import org.eclipse.scout.contacts.client.organization.OrganizationForm;
 import org.eclipse.scout.contacts.client.person.PersonForm;
@@ -102,35 +101,6 @@ public class Desktop extends AbstractDesktop {
     @Override
     protected String getConfiguredKeyStroke() {
       return "ctrl-shift-c";
-    }
-    //tag::DesktopInit[]
-  }
-
-  @Order(2)
-  public class SearchOutlineViewButton extends AbstractOutlineViewButton {
-    //end::DesktopInit[]
-
-    public SearchOutlineViewButton() {
-      this(SearchOutline.class);
-    }
-
-    protected SearchOutlineViewButton(Class<? extends SearchOutline> outlineClass) {
-      super(Desktop.this, outlineClass);
-    }
-
-    @Override
-    protected DisplayStyle getConfiguredDisplayStyle() {
-      return DisplayStyle.TAB;
-    }
-
-    @Override
-    protected String getConfiguredIconId() {
-      return AbstractIcons.Search;
-    }
-
-    @Override
-    protected String getConfiguredKeyStroke() {
-      return IKeyStroke.F3;
     }
     //tag::DesktopInit[]
   }

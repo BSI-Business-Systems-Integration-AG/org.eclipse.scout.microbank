@@ -1,9 +1,10 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.server.account;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.scout.contacts.events.account.model.Account;
+import org.eclipse.scout.contacts.server.account.model.Account;
+import org.eclipse.scout.contacts.shared.account.IWalletLookupService;
 import org.eclipse.scout.rt.platform.BEANS;
 import org.eclipse.scout.rt.server.services.lookup.AbstractLookupService;
 import org.eclipse.scout.rt.shared.services.lookup.ILookupCall;
@@ -27,7 +28,7 @@ public class WalletLookupService extends AbstractLookupService<String> implement
   public List<? extends ILookupRow<String>> getDataByKey(ILookupCall<String> call) {
     ArrayList<LookupRow<String>> rows = new ArrayList<>();
 
-    Account wallet = BEANS.get(EthereumService.class).getWallet(call.getKey());
+    Account wallet = BEANS.get(EthereumService.class).getAccount(call.getKey());
     rows.add(new LookupRow<>(wallet.getAddress(), wallet.getName()));
 
     return rows;
@@ -44,8 +45,8 @@ public class WalletLookupService extends AbstractLookupService<String> implement
     ArrayList<LookupRow<String>> rows = new ArrayList<>();
     String searchText = getSearchText(call);
 
-    for (String address : BEANS.get(EthereumService.class).getWallets(getPersonId())) {
-      Account wallet = BEANS.get(EthereumService.class).getWallet(address);
+    for (String address : BEANS.get(EthereumService.class).getAccounts(getPersonId())) {
+      Account wallet = BEANS.get(EthereumService.class).getAccount(address);
       if (wallet.getName().toLowerCase().contains(searchText)) {
         rows.add(new LookupRow<>(wallet.getAddress(), wallet.getName()));
       }
@@ -68,10 +69,10 @@ public class WalletLookupService extends AbstractLookupService<String> implement
   public List<? extends ILookupRow<String>> getDataByAll(ILookupCall<String> call) {
     ArrayList<LookupRow<String>> rows = new ArrayList<>();
 
-    BEANS.get(EthereumService.class).getWallets(getPersonId())
+    BEANS.get(EthereumService.class).getAccounts(getPersonId())
         .stream()
         .forEach(address -> {
-          Account wallet = BEANS.get(EthereumService.class).getWallet(address);
+          Account wallet = BEANS.get(EthereumService.class).getAccount(address);
           rows.add(new LookupRow<>(wallet.getAddress(), wallet.getName()));
         });
 

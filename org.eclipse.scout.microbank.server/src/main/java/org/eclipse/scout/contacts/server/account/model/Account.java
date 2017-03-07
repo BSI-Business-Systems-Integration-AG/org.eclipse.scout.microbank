@@ -1,4 +1,4 @@
-package org.eclipse.scout.contacts.events.account.model;
+package org.eclipse.scout.contacts.server.account.model;
 
 import java.io.File;
 import java.math.BigInteger;

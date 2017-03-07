@@ -22,6 +22,7 @@ import org.eclipse.scout.contacts.shared.person.PersonTablePageData;
 import org.eclipse.scout.contacts.shared.person.PersonUpdatePermission;
 import org.eclipse.scout.rt.platform.exception.VetoException;
 import org.eclipse.scout.rt.platform.holders.NVPair;
+import org.eclipse.scout.rt.platform.holders.StringHolder;
 import org.eclipse.scout.rt.platform.util.StringUtility;
 import org.eclipse.scout.rt.server.jdbc.SQL;
 import org.eclipse.scout.rt.shared.TEXTS;
@@ -32,84 +33,93 @@ import org.eclipse.scout.rt.shared.services.common.security.ACCESS;
 //tag::getTableData[]
 public class PersonService implements IPersonService {
 
-  //end::all[]
-  @Override
-  public PersonTablePageData getPersonTableData(SearchFilter filter, String organizationId) {
-    PersonTablePageData pageData = new PersonTablePageData();
-    PersonSearchFormData searchData = (PersonSearchFormData) filter.getFormData();
-    StringBuilder sql = new StringBuilder();
+	public String getDisplayName(String personKey) {
+		String sql = String.format("SELECT first_name, last_name FROM PERSON WHERE person_id like '%s' INTO :firstName, :lastName", personKey);
+		StringHolder firstName = new StringHolder();
+		StringHolder lastName = new StringHolder();
+		SQL.selectInto(sql, new NVPair("firstName", firstName), new NVPair("lastName", lastName));
+		
+		return StringUtility.join(" ", firstName, lastName);
+	}
 
-    sql.append(SQLs.PERSON_PAGE_SELECT);
-    // end::getTableData[]
-    // tag::addOrganizationCriteria[]
-    sql.append(" WHERE 1 = 1 ");
-    addToWhere(sql, organizationId, "organization_id", "organizationId");
-    // end::addOrganizationCriteria[]
+	//end::all[]
+	@Override
+	public PersonTablePageData getPersonTableData(SearchFilter filter, String organizationId) {
+		PersonTablePageData pageData = new PersonTablePageData();
+		PersonSearchFormData searchData = (PersonSearchFormData) filter.getFormData();
+		StringBuilder sql = new StringBuilder();
 
-    if (searchData != null) {
-      addToWhere(sql, searchData.getFirstName().getValue(), "first_name", "firstName");
-      addToWhere(sql, searchData.getLastName().getValue(), "last_name", "lastName");
-      addToWhere(sql, searchData.getLocation().getCity().getValue(), "city", "location.city");
-      addToWhere(sql, searchData.getLocation().getCountry().getValue(), "country", "location.country");
-      addToWhere(sql, searchData.getOrganization().getValue(), "organization_id", "organization");
-    }
+		sql.append(SQLs.PERSON_PAGE_SELECT);
+		// end::getTableData[]
+		// tag::addOrganizationCriteria[]
+		sql.append(" WHERE 1 = 1 ");
+		addToWhere(sql, organizationId, "organization_id", "organizationId");
+		// end::addOrganizationCriteria[]
 
-    // tag::getTableData[]
-    sql.append(SQLs.PERSON_PAGE_DATA_SELECT_INTO);
+		if (searchData != null) {
+			addToWhere(sql, searchData.getFirstName().getValue(), "first_name", "firstName");
+			addToWhere(sql, searchData.getLastName().getValue(), "last_name", "lastName");
+			addToWhere(sql, searchData.getLocation().getCity().getValue(), "city", "location.city");
+			addToWhere(sql, searchData.getLocation().getCountry().getValue(), "country", "location.country");
+			addToWhere(sql, searchData.getOrganization().getValue(), "organization_id", "organization");
+		}
 
-    SQL.selectInto(sql.toString(), searchData, new NVPair("organizationId", organizationId), new NVPair("page", pageData));
+		// tag::getTableData[]
+		sql.append(SQLs.PERSON_PAGE_DATA_SELECT_INTO);
 
-    return pageData;
-  }
-  // end::getTableData[]
-  // tag::addOrganizationCriteria[]
+		SQL.selectInto(sql.toString(), searchData, new NVPair("organizationId", organizationId), new NVPair("page", pageData));
 
-  protected void addToWhere(StringBuilder sqlWhere, String fieldValue, String sqlAttribute, String searchAttribute) {
-    if (StringUtility.hasText(fieldValue)) {
-      sqlWhere.append(String.format(SQLs.AND_LIKE_CAUSE, sqlAttribute, searchAttribute));
-    }
-  }
-  // end::addOrganizationCriteria[]
+		return pageData;
+	}
+	// end::getTableData[]
+	// tag::addOrganizationCriteria[]
 
-  //tag::all[]
-  @Override
-  public PersonFormData create(PersonFormData formData) {
-    if (!ACCESS.check(new PersonCreatePermission())) {
-      throw new VetoException(TEXTS.get("InsufficientPrivileges"));
-    }
+	protected void addToWhere(StringBuilder sqlWhere, String fieldValue, String sqlAttribute, String searchAttribute) {
+		if (StringUtility.hasText(fieldValue)) {
+			sqlWhere.append(String.format(SQLs.AND_LIKE_CAUSE, sqlAttribute, searchAttribute));
+		}
+	}
+	// end::addOrganizationCriteria[]
 
-    // add a unique person id if necessary
-    if (StringUtility.isNullOrEmpty(formData.getPersonId())) {
-      formData.setPersonId(UUID.randomUUID().toString());
-    }
+	//tag::all[]
+	@Override
+	public PersonFormData create(PersonFormData formData) {
+		if (!ACCESS.check(new PersonCreatePermission())) {
+			throw new VetoException(TEXTS.get("InsufficientPrivileges"));
+		}
 
-    SQL.insert(SQLs.PERSON_INSERT, formData); // <1>
+		// add a unique person id if necessary
+		if (StringUtility.isNullOrEmpty(formData.getPersonId())) {
+			formData.setPersonId(UUID.randomUUID().toString());
+		}
 
-    return store(formData); // <2>
-  }
+		SQL.insert(SQLs.PERSON_INSERT, formData); // <1>
 
-  @Override
-  public PersonFormData load(PersonFormData formData) {
-    if (!ACCESS.check(new PersonReadPermission())) {
-      throw new VetoException(TEXTS.get("InsufficientPrivileges"));
-    }
+		return store(formData); // <2>
+	}
 
-    SQL.selectInto(SQLs.PERSON_SELECT, formData); // <3>
+	@Override
+	public PersonFormData load(PersonFormData formData) {
+		if (!ACCESS.check(new PersonReadPermission())) {
+			throw new VetoException(TEXTS.get("InsufficientPrivileges"));
+		}
 
-    return formData;
-  }
+		SQL.selectInto(SQLs.PERSON_SELECT, formData); // <3>
 
-  @Override
-  public PersonFormData store(PersonFormData formData) {
-    if (!ACCESS.check(new PersonUpdatePermission())) {
-      throw new VetoException(TEXTS.get("InsufficientPrivileges"));
-    }
+		return formData;
+	}
 
-    SQL.update(SQLs.PERSON_UPDATE, formData); // <4>
+	@Override
+	public PersonFormData store(PersonFormData formData) {
+		if (!ACCESS.check(new PersonUpdatePermission())) {
+			throw new VetoException(TEXTS.get("InsufficientPrivileges"));
+		}
 
-    return formData;
-  }
-  // tag::getTableData[]
+		SQL.update(SQLs.PERSON_UPDATE, formData); // <4>
+
+		return formData;
+	}
+	// tag::getTableData[]
 }
 // end::all[]
 // end::getTableData[]

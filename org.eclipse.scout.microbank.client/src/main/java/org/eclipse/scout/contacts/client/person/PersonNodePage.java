@@ -2,7 +2,7 @@ package org.eclipse.scout.contacts.client.person;
 
 import java.util.List;
 
-import org.eclipse.scout.contacts.events.account.AccountTablePage;
+import org.eclipse.scout.contacts.client.account.AccountTablePage;
 import org.eclipse.scout.rt.client.ui.desktop.outline.pages.AbstractPageWithNodes;
 import org.eclipse.scout.rt.client.ui.desktop.outline.pages.IPage;
 

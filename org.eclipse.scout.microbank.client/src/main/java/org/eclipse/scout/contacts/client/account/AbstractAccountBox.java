@@ -1,5 +1,7 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.client.account;
 
+import org.eclipse.scout.contacts.shared.account.IWalletLookupService;
+import org.eclipse.scout.contacts.shared.account.WalletLookupCall;
 import org.eclipse.scout.contacts.shared.person.PersonLookupCall;
 import org.eclipse.scout.rt.client.ui.form.fields.sequencebox.AbstractSequenceBox;
 import org.eclipse.scout.rt.client.ui.form.fields.smartfield.AbstractSmartField;

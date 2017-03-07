@@ -1,4 +1,4 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.shared.account;
 
 import org.eclipse.scout.rt.platform.service.IService;
 import org.eclipse.scout.rt.shared.TunnelToServer;

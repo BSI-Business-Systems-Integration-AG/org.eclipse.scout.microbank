@@ -1,4 +1,4 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.shared.account;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public class TransactionStatusLookupCall extends LocalLookupCall<Integer> {
    * see {@link Transaction} class on server.
    */
   public static final int ERROR = -2;
-  public static final int REPLACED = -1;
+  public static final int REMOVED = -1;
   public static final int UNDEFINED = 0;
   public static final int OFFLINE = 1;
   public static final int PENDING = 2;
@@ -27,7 +27,7 @@ public class TransactionStatusLookupCall extends LocalLookupCall<Integer> {
     ArrayList<LookupRow<Integer>> rows = new ArrayList<>();
 
     rows.add(new LookupRow<>(ERROR, TEXTS.get("TxStatusError")));
-    rows.add(new LookupRow<>(REPLACED, TEXTS.get("TxStatusReplaced")));
+    rows.add(new LookupRow<>(REMOVED, TEXTS.get("TxStatusRemoved")));
     rows.add(new LookupRow<>(UNDEFINED, TEXTS.get("TxStatusUndefined")));
     rows.add(new LookupRow<>(OFFLINE, TEXTS.get("TxStatusOffline")));
     rows.add(new LookupRow<>(PENDING, TEXTS.get("TxStatusPending")));

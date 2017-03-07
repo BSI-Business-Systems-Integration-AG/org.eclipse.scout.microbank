@@ -16,8 +16,8 @@ import org.eclipse.scout.rt.server.jdbc.lookup.AbstractSqlLookupService;
 
 public class PersonLookupService extends AbstractSqlLookupService<String> implements IPersonLookupService {
 
-  @Override
-  protected String getConfiguredSqlSelect() {
-    return SQLs.PERSON_LOOKUP;
-  }
+	@Override
+	protected String getConfiguredSqlSelect() {
+		return SQLs.PERSON_LOOKUP;
+	}
 }

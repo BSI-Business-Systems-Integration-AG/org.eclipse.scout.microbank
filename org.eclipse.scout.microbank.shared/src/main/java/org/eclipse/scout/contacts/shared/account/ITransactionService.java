@@ -1,6 +1,7 @@
-package org.eclipse.scout.contacts.events.account;
+package org.eclipse.scout.contacts.shared.account;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import org.eclipse.scout.rt.platform.service.IService;
 import org.eclipse.scout.rt.shared.TunnelToServer;
@@ -21,6 +22,8 @@ public interface ITransactionService extends IService {
 
   TransactionFormData store(TransactionFormData formData);
 
+  BigDecimal convertToEther(BigInteger weiAmount);
+  
   BigDecimal convertToEther(BigDecimal weiAmount);
 
   void send(String transactionId);
